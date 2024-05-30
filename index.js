@@ -9,6 +9,16 @@ const PORT = (process.env.PORT || 2000);
 app.use(express.json());
 app.use(cors());
 
+// Connect to mongodb with mongoose
+const mongoose = require("mongoose");
+mongoose.set("strictQuery", false);
+const mongoDB = process.env.MONGODB_URI;
+
+main().catch((err) => console.log(err));
+async function main() {
+  await mongoose.connect(mongoDB);
+}
+
 app.listen(PORT, () => {
     console.log(PORT)
     console.log(`Listening on port ${PORT}`)
