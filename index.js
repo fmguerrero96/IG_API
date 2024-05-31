@@ -5,6 +5,9 @@ require('dotenv').config()
 
 const app = express();
 
+// Import routes
+const userRoutes = require("./routes/userRoutes")
+
 const PORT = (process.env.PORT || 2000);
 
 app.use(express.json());
@@ -18,6 +21,9 @@ main().catch((err) => console.log(err));
 async function main() {
   await mongoose.connect(mongoDB);
 }
+
+// Use imported routes
+app.use('/', userRoutes);
 
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`)
