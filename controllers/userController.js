@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const { body, validationResult} = require('express-validator');
+const jwt = require("jsonwebtoken");
 
 //Create User 
 exports.createUser = [
@@ -45,6 +46,59 @@ exports.createUser = [
         } catch(error) {
             console.log(error)
             return res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+];
+
+// Login controller
+exports.login = [
+    //Validate and sanitize input fields
+    body('username')
+        .trim()
+        .isLength({ min: 1 })
+        .escape()
+        .withMessage('Please provide your username.'),
+    body('password')
+        .trim()
+        .isLength({ min: 1 })
+        .escape()
+        .withMessage('Please provide your password.'), 
+
+    async (req, res) => {
+        const {username, password} = req.body;
+
+        try{
+            // Extract the validation errors from a request.
+            const errors = validationResult(req);
+            if(!errors.isEmpty()){
+                console.log(errors)
+                return res.status(400).json({ error: errors.array() })
+            }
+
+            // Find user in database
+            const user = await User.findOne({ username: username })
+
+            // If user does not exist or password is incorrect, return error
+            if (!user || !(await bcrypt.compare(password, user.password)) ) {
+                console.log('Invalid Credentials')
+                return res.status(401).json({error: 'Invalid cretentials'})
+            }
+
+            // If authentication successful, generate JWT token
+            const token = jwt.sign(
+                {id: user._id, username: user.username}, 
+                process.env.SECRET_ACCESS_TOKEN, 
+                { expiresIn: '2 days' }
+            );
+
+            // Send token as cookie
+            res.cookie('token', token)
+            return res.status(200).json('Successfull login');
+
+        } catch(err){
+            //Handle potential database query error
+            console.log(err)
+            res.status(500).json({ error: 'Internal server error. Login unsuccessfull'})
         }
     }
 ];
