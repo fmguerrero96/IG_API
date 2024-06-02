@@ -11,7 +11,10 @@ const userRoutes = require("./routes/userRoutes")
 const PORT = (process.env.PORT || 2000);
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({ 
+  credentials: true, //allow cookies to be sent
+  origin: 'http://localhost:5173' //front-end origin
+}));
 
 // Connect to mongodb with mongoose
 mongoose.set("strictQuery", false);
