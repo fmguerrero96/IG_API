@@ -1,7 +1,6 @@
 const User = require('./models/user');
 const passport = require('passport');
 const JwtStrategy = require('passport-jwt').Strategy;
-const { ExtractJwt, Strategy } = require('passport-jwt');
 require('dotenv').config();
 
 // This function will extract jwt from cookies
@@ -35,7 +34,6 @@ passport.use(new JwtStrategy (options, async (payload, done) => {
         }
     } catch (error) {
         console.log(error)
-        //
         return done(error, false)
     }
 })); 
