@@ -1,9 +1,13 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require("mongoose");
+const passport = require('passport');
+const passportConfig = require('./passport-config')
+const cookieParser = require('cookie-parser');
 require('dotenv').config()
 
 const app = express();
+app.use(passport.initialize());
 
 // Import routes
 const userRoutes = require("./routes/userRoutes")
@@ -15,6 +19,7 @@ app.use(cors({
   credentials: true, //allow cookies to be sent
   origin: 'http://localhost:5173' //front-end origin
 }));
+app.use(cookieParser())
 
 // Connect to mongodb with mongoose
 mongoose.set("strictQuery", false);
