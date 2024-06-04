@@ -93,7 +93,7 @@ exports.login = [
 
             // Send token as cookie
             res.cookie('token', token)
-            return res.status(200).json('Successfull login');
+            return res.status(200).json({username: user.username, _id: user._id});
 
         } catch(err){
             //Handle potential database query error
