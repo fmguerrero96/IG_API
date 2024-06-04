@@ -102,7 +102,3 @@ exports.login = [
         }
     }
 ];
-
-exports.test = async (req, res) => {
-    res.status(200).json({success: true, msg: 'You are authorized'})
-}

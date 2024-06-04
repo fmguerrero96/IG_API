@@ -13,7 +13,5 @@ router.post('/users', user_controller.createUser);
 // Login
 router.post('/users/login', user_controller.login);
 
-//test
-router.get('/protected', authenticateJWT, user_controller.test)
 
 module.exports = router;
