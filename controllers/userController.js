@@ -2,6 +2,7 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const { body, validationResult} = require('express-validator');
 const jwt = require("jsonwebtoken");
+// require('dotenv').config()
 
 //Create User 
 exports.createUser = [
@@ -102,3 +103,21 @@ exports.login = [
         }
     }
 ];
+
+// Send single user info
+exports.getUser = async (req, res) => {
+    const token = req.cookies.token
+
+    if (!token) {
+        return res.status(401).json({ message: 'Unauthorized: No token provided' });
+    }
+
+    try{
+        const decodedToken = jwt.verify(token, process.env.SECRET_ACCESS_TOKEN)
+        res.json(decodedToken)
+        return res.status(200)
+    }catch(err){
+        console.log('Error verifying token:', err);
+        return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+    }
+};
