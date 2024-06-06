@@ -16,4 +16,7 @@ router.post('/users/login', user_controller.login);
 // Send single user info (protected route)
 router.get('/user', authenticateJWT, user_controller.getUser);
 
+// Logout
+router.post('/logout', user_controller.logout);
+
 module.exports = router;
