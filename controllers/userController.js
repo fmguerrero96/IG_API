@@ -2,7 +2,6 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const { body, validationResult} = require('express-validator');
 const jwt = require("jsonwebtoken");
-// require('dotenv').config()
 
 //Create User 
 exports.createUser = [
