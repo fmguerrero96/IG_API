@@ -109,10 +109,12 @@ exports.getUser = async (req, res) => {
     const token = req.cookies.token
 
     if (!token) {
+        //Return with unauthorized status if no token is provided
         return res.status(401).json({ message: 'Unauthorized: No token provided' });
     }
 
     try{
+        //Decode token and respond with decoded token info
         const decodedToken = jwt.verify(token, process.env.SECRET_ACCESS_TOKEN)
         res.json(decodedToken)
         return res.status(200)
