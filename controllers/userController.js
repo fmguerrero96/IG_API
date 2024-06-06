@@ -121,3 +121,9 @@ exports.getUser = async (req, res) => {
         return res.status(401).json({ message: 'Unauthorized: Invalid token' });
     }
 };
+
+exports.logout = (req, res) =>  {
+    // Delete the 'token' cookie and send message
+    res.clearCookie('token')
+    return res.status(200).json({ message: 'Logout successfull.'})
+};
