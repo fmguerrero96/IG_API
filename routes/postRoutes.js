@@ -7,5 +7,7 @@ const authenticateJWT = passport.authenticate('jwt', { session: false });
 
 const postController = require('../controllers/postController');
 
+// Create new post
+router.post('/post', authenticateJWT, postController.createPost)
 
 module.exports = router;
