@@ -7,7 +7,7 @@ const PostSchema = new Schema({
     time_stamp: { type: Date, default: Date.now },
     comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
     likes_count: {type: Number, default: 0 },
-    picture: {type: },
+    picture: {type: String},
 });
 
 const PostModel = model('Post', PostSchema);
