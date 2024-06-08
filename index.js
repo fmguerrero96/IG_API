@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require("mongoose");
 const passport = require('passport');
-const passportConfig = require('./passport-config')
+const passportConfig = require('./passport-config');
 const cookieParser = require('cookie-parser');
 require('dotenv').config()
 
@@ -10,7 +10,8 @@ const app = express();
 app.use(passport.initialize());
 
 // Import routes
-const userRoutes = require("./routes/userRoutes")
+const userRoutes = require("./routes/userRoutes");
+const postRoutes = require("./routes/postRoutes");
 
 const PORT = (process.env.PORT || 2000);
 
@@ -32,7 +33,8 @@ async function main() {
 
 // Use imported routes
 app.use('/', userRoutes);
+app.use('/', postRoutes);
 
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`)
-})
+});
