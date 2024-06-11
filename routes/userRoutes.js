@@ -13,10 +13,13 @@ router.post('/users', user_controller.createUser);
 // Login
 router.post('/users/login', user_controller.login);
 
-// Send single user info (protected route)
+// Send single user info from decoded token (protected route)
 router.get('/user/token', authenticateJWT, user_controller.decodeTokenInfo);
 
 // Logout
 router.post('/logout', user_controller.logout);
+
+// Fnd user in db
+router.get('/user', authenticateJWT, user_controller.findUser)
 
 module.exports = router;
