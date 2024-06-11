@@ -104,7 +104,7 @@ exports.login = [
 ];
 
 // Send single user info
-exports.getUser = async (req, res) => {
+exports.decodeTokenInfo = async (req, res) => {
     const token = req.cookies.token
 
     if (!token) {
