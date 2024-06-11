@@ -103,7 +103,7 @@ exports.login = [
     }
 ];
 
-// Send single user info
+// Decode jwt
 exports.decodeTokenInfo = async (req, res) => {
     const token = req.cookies.token
 
@@ -127,4 +127,22 @@ exports.logout = (req, res) =>  {
     // Delete the 'token' cookie and send message
     res.clearCookie('token')
     return res.status(200).json({ message: 'Logout successfull.'})
+};
+
+//Find user in db
+exports.findUser = async (req, res) => {
+    try{
+        //decode jwt to get the user id
+        const token = req.cookies.token
+        const decodedToken = jwt.verify(token, process.env.SECRET_ACCESS_TOKEN)
+        const id =  decodedToken.id
+
+        //find user in db
+        const user = await User.findById(id).select('username posts followers following')
+
+        return res.json(user)
+    } catch(err) {
+        console.log(err)
+        return res.status(404).json({ message: 'Internal server error'})
+    }
 };
