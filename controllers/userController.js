@@ -2,6 +2,7 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const { body, validationResult} = require('express-validator');
 const jwt = require("jsonwebtoken");
+const { model } = require('mongoose');
 
 //Create User 
 exports.createUser = [
@@ -138,7 +139,9 @@ exports.findUser = async (req, res) => {
         const id =  decodedToken.id
 
         //find user in db
-        const user = await User.findById(id).select('username posts followers following')
+        const user = await User.findById(id)
+            .select('username posts followers following')
+            .populate('posts', ['picture'])
 
         return res.json(user)
     } catch(err) {
