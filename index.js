@@ -21,6 +21,7 @@ app.use(cors({
   origin: 'http://localhost:5173' //front-end origin
 }));
 app.use(cookieParser())
+app.use('/uploads', express.static(__dirname + '/uploads'));
 
 // Connect to mongodb with mongoose
 mongoose.set("strictQuery", false);
