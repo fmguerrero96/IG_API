@@ -166,3 +166,24 @@ exports.findByUsername = async (req, res) => {
         return res.status(500).json({ message: 'Internal server error', error });
     }
 };
+
+//Find user by _id
+exports.searchUserByID = async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const user = await User.findById(id)
+            .select('username posts followers following')
+            .populate('posts', ['picture']);
+        if(user){
+            //if user is found
+            return res.status(200).json(user);
+        } else {
+            //if no user is found
+            return res.status(404).json({ message: 'User not found' });
+        }
+    } catch {
+        //Handle potential database query error
+        return res.status(500).json({ message: 'Internal server error', error })
+    }
+};
