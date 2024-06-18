@@ -149,3 +149,20 @@ exports.findUser = async (req, res) => {
         return res.status(404).json({ message: 'Internal server error'})
     }
 };
+
+//Find user by username
+exports.findByUsername = async (req, res) => {
+    const { username } = req.query;
+
+    try {
+        const user = await User.findOne({ username: new RegExp('^' + username + '$', 'i') }); // Case-insensitive search
+
+        if (user) {
+            return res.status(200).json({ _id: user._id, username: user.username });
+        } else {
+            return res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        return res.status(500).json({ message: 'Internal server error', error });
+    }
+};
