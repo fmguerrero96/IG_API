@@ -22,4 +22,6 @@ router.post('/logout', user_controller.logout);
 // Fnd user in db
 router.get('/user', authenticateJWT, user_controller.findUser)
 
+//Find user by username
+router.get('/username', authenticateJWT, user_controller.findByUsername)
 module.exports = router;
