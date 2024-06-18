@@ -20,8 +20,12 @@ router.get('/user/token', authenticateJWT, user_controller.decodeTokenInfo);
 router.post('/logout', user_controller.logout);
 
 // Fnd user in db
-router.get('/user', authenticateJWT, user_controller.findUser)
+router.get('/user', authenticateJWT, user_controller.findUser);
 
 //Find user by username
-router.get('/username', authenticateJWT, user_controller.findByUsername)
+router.get('/username', authenticateJWT, user_controller.findByUsername);
+
+//Find user by id
+router.get('/user/:id', authenticateJWT, user_controller.searchUserByID);
+
 module.exports = router;
