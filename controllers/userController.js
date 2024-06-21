@@ -208,3 +208,44 @@ exports.checkFollow = async (req, res) => {
         console.log(err)
     }
 };
+
+// Handle follow or unfollow
+exports.follow = async (req, res) => {
+    const loggedInUserID = req.params.loggedinID
+    const userToFollowID = req.query.user
+
+    try{
+        const toFollow = await User.findById(userToFollowID)
+        const followersArray = toFollow.followers
+
+        const loggedIn = await User.findById(loggedInUserID)
+
+        //If logged in user is found in followers array
+        //Remove from array to unfollow
+        if(followersArray.includes(loggedInUserID)){
+            await toFollow.followers.pull(loggedInUserID)
+            await toFollow.save()
+
+            //also remove 'user to follow' from 'logged in' following array
+            await loggedIn.following.pull(userToFollowID)
+            await loggedIn.save()
+
+            return res.status(200).json({msg: `User ${loggedInUserID} was removed as follower`})
+        }
+
+        //If 'logged in' user doesn't follow, add into followers array
+        if(!followersArray.includes(loggedInUserID)){
+            toFollow.followers.push(loggedInUserID)
+            await toFollow.save()
+
+            //also add 'user to follow' into 'logged in' following array
+            loggedIn.following.push(userToFollowID)
+            await loggedIn.save()
+
+            return res.status(200).json({msg: `User ${loggedInUserID} was added as follower`})
+        }
+
+    } catch(err){
+        console.log(err)
+    }
+};
