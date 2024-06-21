@@ -28,4 +28,7 @@ router.get('/username', authenticateJWT, user_controller.findByUsername);
 //Find user by id
 router.get('/user/:id', authenticateJWT, user_controller.searchUserByID);
 
+//check if user is followed 
+router.get('/follow/:loggedinID/user', authenticateJWT, user_controller.checkFollow)
+
 module.exports = router;
