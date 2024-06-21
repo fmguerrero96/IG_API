@@ -187,3 +187,24 @@ exports.searchUserByID = async (req, res) => {
         return res.status(500).json({ message: 'Internal server error', error })
     }
 };
+
+//Check if user is followed 
+exports.checkFollow = async (req, res) => {
+    const loggedInUserID = req.params.loggedinID
+    const userToFollowID = req.query.user
+
+    try{
+        //find user to follow and its followers
+        const toFollow = await User.findById(userToFollowID)
+        const followersArray = toFollow.followers
+
+        //If logged in user is found in followers array...
+        if(followersArray.includes(loggedInUserID)){
+            return res.status(200).json(true)
+        }
+
+        return res.status(200).json(false)
+    } catch(err){
+        console.log(err)
+    }
+};
