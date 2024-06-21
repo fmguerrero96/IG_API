@@ -31,4 +31,7 @@ router.get('/user/:id', authenticateJWT, user_controller.searchUserByID);
 //check if user is followed 
 router.get('/follow/:loggedinID/user', authenticateJWT, user_controller.checkFollow)
 
+//Handle follow or unfollow
+router.post('/follow/:loggedinID/user', authenticateJWT, user_controller.follow)
+
 module.exports = router;
