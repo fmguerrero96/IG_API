@@ -4,6 +4,8 @@ const { body, validationResult} = require('express-validator');
 const multer = require('multer');
 const uploadMiddleware = multer({ dest: 'uploads/' })
 const fs = require('fs')
+const jwt = require("jsonwebtoken");
+const lodash = require("lodash");
 
 //Create new post
 exports.createPost = [
@@ -58,3 +60,30 @@ exports.createPost = [
         }
     }
 ];
+
+// Get feed
+exports.getFeed = async (req, res) => {
+    //decode jwt to get the user id
+    const token = req.cookies.token
+    const decodedToken = jwt.verify(token, process.env.SECRET_ACCESS_TOKEN)
+    const loggedInUserID =  decodedToken.id
+
+    try{
+        // Get the users followed by the logged-in user
+        const user = await User.findById(loggedInUserID).populate('following')
+
+        // Get the posts from the followed users
+        const followingIds = user.following.map(followedUser => followedUser._id)
+        const posts = await Post.find({ author: { $in: followingIds } }).populate('author')
+
+        // Shuffle posts
+        const shuffledPosts = lodash.shuffle(posts)
+
+        return res.status(200).json(shuffledPosts);
+    } catch(err) {
+        console.error('Error fetching feed:', err);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+
+    
+};
