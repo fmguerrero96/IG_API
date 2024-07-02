@@ -13,4 +13,7 @@ router.post('/post', authenticateJWT, postController.createPost);
 // Get feed
 router.get('/feed', authenticateJWT, postController.getFeed);
 
+// Like/Dislike post
+router.post('/posts/:postId/like', authenticateJWT, postController.like);
+
 module.exports = router;
