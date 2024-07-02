@@ -87,3 +87,37 @@ exports.getFeed = async (req, res) => {
 
     
 };
+
+exports.like = async (req, res) => {
+    //decode jwt to get the user id
+    const token = req.cookies.token
+    const decodedToken = jwt.verify(token, process.env.SECRET_ACCESS_TOKEN)
+    const loggedInUserID =  decodedToken.id
+    const postId = req.params.postId
+
+    try{
+        // Find the post
+        const post = await Post.findById(postId);
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found' });
+        }
+
+        // Check if the user already liked the post
+        const hasLiked = post.likes_count.includes(loggedInUserID);
+        if (hasLiked) {
+            // Unlike the post/remove id from likes array
+            post.likes_count.pull(loggedInUserID);
+        } else {
+            // Like the post/add id into likes array
+            post.likes_count.push(loggedInUserID);
+        }
+
+        await post.save();
+        // res.status(200).json(post);
+        res.status(200).json({ likes_count: post.likes_count, hasLiked: !hasLiked });
+
+    } catch(err){
+        console.error('Error liking/unliking post:', err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
