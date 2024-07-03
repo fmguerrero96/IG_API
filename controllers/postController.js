@@ -121,3 +121,19 @@ exports.like = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
+exports.getPost = async (req, res) => {
+    const post_id = req.params.id
+    
+    try{
+        const post = await Post.findById(post_id)
+        if(post){
+            return res.status(200).json(post)
+        } else {
+            return res.status(404).json({message: 'Post not found'})
+        }
+    } catch(err){
+        //Handle potential database query error
+        return res.status(500).json({ message: 'Internal server error', err })
+    }
+};
