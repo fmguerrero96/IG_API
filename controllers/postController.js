@@ -126,7 +126,7 @@ exports.getPost = async (req, res) => {
     const post_id = req.params.id
     
     try{
-        const post = await Post.findById(post_id)
+        const post = await Post.findById(post_id).populate('author')
         if(post){
             return res.status(200).json(post)
         } else {
