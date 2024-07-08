@@ -7,6 +7,7 @@ const authenticateJWT = passport.authenticate('jwt', { session: false });
 
 const comment_controller = require('../controllers/commentController');
 
-
+// Create new comment
+router.post('/comment/:postID', comment_controller.createComment);
 
 module.exports = router;
