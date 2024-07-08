@@ -12,6 +12,7 @@ app.use(passport.initialize());
 // Import routes
 const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/postRoutes");
+const commentRoutes = require("./routes/commentRoutes");
 
 const PORT = (process.env.PORT || 2000);
 
@@ -35,6 +36,7 @@ async function main() {
 // Use imported routes
 app.use('/', userRoutes);
 app.use('/', postRoutes);
+app.use('/', commentRoutes)
 
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`)
