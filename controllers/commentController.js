@@ -47,3 +47,19 @@ exports.createComment = [
         }
     }
 ];
+
+// Get comments from a specific post
+exports.getComments = async (req, res) => {
+    const post_id = req.params.postID
+
+    // Find comments related to this post and populate their authors
+    const comments = await Comment.find({ belongs_to_post: post_id })
+    .populate('author', 'username') // Populate only the username field of the author
+    .select('author text time_stamp'); // Explicitly select the fields to return
+
+    if(comments){
+        return res.status(200).json(comments)
+    } else {
+        return res.status(400).json({msg: "No Comments found for this post"})
+    }
+};
