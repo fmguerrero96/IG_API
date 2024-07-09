@@ -55,7 +55,8 @@ exports.getComments = async (req, res) => {
     // Find comments related to this post and populate their authors
     const comments = await Comment.find({ belongs_to_post: post_id })
     .populate('author', 'username') // Populate only the username field of the author
-    .select('author text time_stamp'); // Explicitly select the fields to return
+    .select('author text time_stamp') // Explicitly select the fields to return
+    .sort({ time_stamp: -1 });
 
     if(comments){
         return res.status(200).json(comments)
