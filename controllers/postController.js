@@ -1,5 +1,6 @@
 const Post = require('../models/post');
 const User = require('../models/user');
+const Comment = require('../models/comment');
 const { body, validationResult} = require('express-validator');
 const multer = require('multer');
 const uploadMiddleware = multer({ dest: 'uploads/' })
@@ -171,3 +172,25 @@ exports.updatePost = [
         }
     }
 ];
+
+//Delete a post and its comments
+exports.deletePost = async (req, res) => {
+    const post_id = req.params.id
+    
+    try {
+        // Find and delete all comments associated with the post
+        await Comment.deleteMany({ belongs_to_post: post_id });
+
+        // Delete the post
+        const post = await Post.findByIdAndDelete(post_id);
+
+        if (post) {
+            return res.status(200).json({ message: 'Post and associated comments deleted successfully' });
+        } else {
+            return res.status(404).json({ message: 'Post not found' });
+        }
+    } catch (err) {
+        // Handle potential database query error
+        return res.status(500).json({ message: 'Internal server error', err });
+    }
+};
