@@ -19,4 +19,7 @@ router.post('/posts/:postId/like', authenticateJWT, postController.like);
 // Get single post
 router.get('/posts/:id', authenticateJWT, postController.getPost);
 
+// Update post
+router.put('/posts/update/:id', authenticateJWT, postController.updatePost);
+
 module.exports = router;
