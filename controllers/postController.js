@@ -137,3 +137,37 @@ exports.getPost = async (req, res) => {
         return res.status(500).json({ message: 'Internal server error', err })
     }
 };
+
+//Update post
+exports.updatePost = [
+    //Validate and sanitize input fields
+    body('caption')
+        .trim()
+        .escape()
+        .isLength({ max: 150 })
+        .withMessage('Captions cannot be longer than 150 characters.'),
+
+    async (req, res) => {
+        const newCaption = req.body.caption
+        const post_id = req.params.id
+
+        try{
+            // Extract the validation errors from a request.
+            const errors = validationResult(req);
+            if(!errors.isEmpty()){
+                return res.status(400).json({ error: errors.array() })
+            }
+
+            //find post to be updated
+            const post = await Post.findById(post_id)
+            //update caption
+            post.caption = newCaption
+            //save post
+            await post.save()
+            return res.status(200).json(post)
+
+        }catch(err){
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+];
