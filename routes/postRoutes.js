@@ -22,4 +22,7 @@ router.get('/posts/:id', authenticateJWT, postController.getPost);
 // Update post
 router.put('/posts/update/:id', authenticateJWT, postController.updatePost);
 
+// Delete post
+router.delete('/posts/delete/:id', authenticateJWT, postController.deletePost);
+
 module.exports = router;
