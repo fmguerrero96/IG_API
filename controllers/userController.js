@@ -41,6 +41,7 @@ exports.createUser = [
             const user = new User({
                 username: username,
                 password: hashedPassword,
+                profile_pic: '',
             })
             await user.save()
             res.status(201).json({ message: 'New user created successfully.'})
@@ -140,7 +141,7 @@ exports.findUser = async (req, res) => {
 
         //find user in db
         const user = await User.findById(id)
-            .select('username posts followers following')
+            .select('username posts followers following profile_pic')
             .populate('posts', ['picture'])
 
         return res.json(user)
