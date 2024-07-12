@@ -34,4 +34,7 @@ router.get('/follow/:loggedinID/user', authenticateJWT, user_controller.checkFol
 //Handle follow or unfollow
 router.post('/follow/:loggedinID/user', authenticateJWT, user_controller.follow)
 
+// Update user
+router.put('/user/update/:id', authenticateJWT, user_controller.updateUser);
+
 module.exports = router;
