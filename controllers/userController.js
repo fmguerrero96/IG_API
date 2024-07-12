@@ -2,7 +2,9 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const { body, validationResult} = require('express-validator');
 const jwt = require("jsonwebtoken");
-const { model } = require('mongoose');
+const multer = require('multer');
+const uploadMiddleware = multer({ dest: 'uploads/' })
+const fs = require('fs')
 
 //Create User 
 exports.createUser = [
@@ -250,3 +252,50 @@ exports.follow = async (req, res) => {
         return res.status(500).json({ message: 'Internal server error', err})
     }
 };
+
+// Update user 
+exports.updateUser = [
+    //Validate and sanitize input fields
+    body('username')
+        .trim()
+        .isLength({ min: 4 })
+        .escape()
+        .withMessage('Username must be at least 4 charactes long.'),
+
+    //upload Middleware function to only accept one file
+    uploadMiddleware.single('file'),
+
+    async (req, res) => {
+        const {username} = req.body
+        const userID = req.params.id
+        let path, originalname, parts, extension, newPath
+        if(req.file){
+            originalname = req.file.originalname
+            path = req.file.path
+
+            //get file extension (jpeg, png, jpg)
+            parts = originalname.split('.')
+            extension = parts[parts.length - 1]
+
+            //rename image path
+            newPath = path + '.' + extension
+            fs.renameSync(path, newPath)
+        }   
+
+        try{
+            //Find user to be updated
+            const user = await User.findById(userID)
+            //Modify/update the user 
+            user.username = username
+            if(req.file){
+                user.profile_pic = newPath
+            }
+            // save updated user
+            await user.save()
+            return res.status(200).json(user)
+        } catch(err){
+            console.log(err)
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+]
