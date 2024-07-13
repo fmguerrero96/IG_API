@@ -176,7 +176,7 @@ exports.searchUserByID = async (req, res) => {
 
     try {
         const user = await User.findById(id)
-            .select('username posts followers following')
+            .select('username posts followers following profile_pic')
             .populate('posts', ['picture']);
         if(user){
             //if user is found
